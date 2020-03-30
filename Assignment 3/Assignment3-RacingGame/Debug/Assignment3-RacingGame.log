@@ -1,0 +1,8 @@
+﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  Assignment3-RacingGame.cpp
+c:\users\aveng\desktop\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(428): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\aveng\desktop\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(429): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\aveng\desktop\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(430): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\aveng\desktop\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(431): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Assignment3-RacingGame.vcxproj -> C:\Users\aveng\Desktop\Assignment 3\Assignment3-RacingGame\\Assignment3-RacingGameDebug.exe
+  Copying DLLs & shaders...
