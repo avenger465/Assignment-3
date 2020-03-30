@@ -209,7 +209,8 @@ void main()
 			startText << "Game starting in: " << a;
 			gameFont->Draw(startText.str(), 500, 200);
 			startText.str("");
-			if (counter <= 0.0f) enumGameState = Playing;
+			if (counter <= 0.0f) 
+				enumGameState = Playing;
 		}
 		else if (enumGameState == Playing)
 		{
