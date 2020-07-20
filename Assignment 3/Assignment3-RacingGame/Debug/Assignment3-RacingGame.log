@@ -1,10 +1,44 @@
-﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
   Assignment3-RacingGame.cpp
-c:\users\aveng\documents\github\assignment-3\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(104): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\aveng\documents\github\assignment-3\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(446): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\aveng\documents\github\assignment-3\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(447): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\aveng\documents\github\assignment-3\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(450): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\aveng\documents\github\assignment-3\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(451): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\aveng\documents\github\assignment-3\assignment 3\assignment3-racinggame\assignment3-racinggame.cpp(1409): warning C4715: 'sphere2BoxCollision2D': not all control paths return a value
-  Assignment3-RacingGame.vcxproj -> C:\Users\aveng\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\\Assignment3-RacingGameDebug.exe
-  Copying DLLs & shaders...
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(82,23): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(429,47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(430,47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(433,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(434,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(437,3): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(450,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(453,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(456,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(464,5): error C3861: 'OpenFile': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(467,5): error C3861: 'ReadFile': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(478,5): error C3861: 'OpenFile': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(481,5): error C3861: 'ReadFile': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(517,6): error C3861: 'InitialiseMap': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(524,6): error C3861: 'InitialiseMap': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(530,6): error C3861: 'InitialiseMap': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(537,6): error C3861: 'InitialiseMap': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(545,6): error C3861: 'InitialiseMap': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(552,6): error C3861: 'InitialiseMap': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(558,6): error C3861: 'InitialiseMap': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(565,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(583,5): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(589,5): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(635,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(636,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(742,8): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(748,17): error C3861: 'scalar': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(752,8): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(759,16): error C3861: 'scalar': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(766,15): error C3861: 'scalar': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(775,12): error C3861: 'scalar': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(783,12): error C3861: 'scalar': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(801,15): error C3861: 'scalar': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(807,15): error C3861: 'scalar': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(816,5): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(902,15): error C3861: 'sum3': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(974,10): error C3861: 'point2PointCollision2D': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(1253,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(1254,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(1269,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(1316,4): error C3861: 'DisplayText': identifier not found
+C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\Assignment3-RacingGame.cpp(1317,4): error C3861: 'DisplayText': identifier not found

@@ -1,2 +1,2 @@
-#TargetFrameworkVersion=v4.0:PlatformToolSet=v141:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0.15063.0
-Debug|Win32|C:\Users\aveng\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\|
+PlatformToolSet=v142:VCToolArchitecture=Native32Bit:VCToolsVersion=14.26.28801:TargetPlatformVersion=10.0.19041.0:
+Debug|Win32|C:\Users\Games\Documents\GitHub\Assignment-3\Assignment 3\Assignment3-RacingGame\|
