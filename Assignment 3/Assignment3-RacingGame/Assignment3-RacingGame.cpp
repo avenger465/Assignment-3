@@ -74,16 +74,6 @@ void ResetCameraFunction(IModel* dummyCamera, float &cameraXMovement, float &cam
 
 bool CheckPointCollision(float pointX, float pointZ, float checkPointX, float checkPointZ, float halfXWidth, float halfZWidth);
 
-void InitialiseMap(Map& theObject, IMesh* objectMesh, float XPos, float ZPos, float rotationAmount, float scaleAmount);
-
-bool point2PointCollision2D(float distance);
-
-void DisplayText(string displayText, IFont* displayFont, float displayNumber, int xCoordinate, int yCoordinate, string clearStream);
-
-void ReadFile(ifstream& infile, vector<vector<ObjectLoading>>& inputArray, int& checkpointNum, int& isleNum, int& wallNum, int& crossNum, int& dummyNum, int& tankNum, int& enemyNum);
-
-void OpenFile(ifstream& infile, string text);
-
 //The main section of the code 
 void main()
 {
@@ -1333,6 +1323,15 @@ void main()
 	myEngine->Delete();
 }
 
+void InitialiseMap(Map& theObject, IMesh* objectMesh, float XPos, float ZPos, float rotationAmount, float scaleAmount);
+
+bool point2PointCollision2D(float distance);
+
+void DisplayText(string displayText, IFont* displayFont, float displayNumber, int xCoordinate, int yCoordinate, string clearStream);
+
+void ReadFile(ifstream &infile, vector<vector<ObjectLoading>> &inputArray, int& checkpointNum, int& isleNum, int& wallNum, int& crossNum, int& dummyNum, int& tankNum, int& enemyNum);
+
+void OpenFile(ifstream& infile, string text);
 
 
 //Structure data type used to calculate the speed of each vector for the racecar model
