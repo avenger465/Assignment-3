@@ -7,8 +7,6 @@
 #include <fstream>
 #include <cmath>
 #include <vector>
-#include <math.h>
-#include "Math.h"
 using namespace std;
 using namespace tle;
 
@@ -74,53 +72,77 @@ void ResetCameraFunction(IModel* dummyCamera, float &cameraXMovement, float &cam
 
 bool CheckPointCollision(float pointX, float pointZ, float checkPointX, float checkPointZ, float halfXWidth, float halfZWidth);
 
+void InitialiseMap(Map& theObject, IMesh* objectMesh, float XPos, float ZPos, float rotationAmount, float scaleAmount);
+
+bool point2PointCollision2D(float distance);
+
+void DisplayText(string displayText, IFont* displayFont, float displayNumber, int xCoordinate, int yCoordinate, string clearStream);
+
+void ReadFile(ifstream &infile, vector<vector<ObjectLoading>> &inputArray, int& checkpointNum, int& isleNum, int& wallNum, int& crossNum, int& dummyNum, int& tankNum, int& enemyNum);
+
+void OpenFile(ifstream& infile, string text);
+
+
+//Structure data type used to calculate the speed of each vector for the racecar model
+vector2D scalar(float s, vector2D v)
+{
+
+	return {s * v.x, s * v.z};
+}
+//Structure data type used to calculate the actual speed using all three vectors of the racecar model
+vector2D sum3(vector2D v1, vector2D v2, vector2D v3)
+{
+
+	return {v1.x + v2.x + v3.x, v1.z + v2.z + v3.z};
+}
+
 //The main section of the code 
 void main()
 {
 	//Map and matrix information
-	const int maxNumberOfColumns = 100;
-	const int mapScale = 2.5;
-	const int mapObjectColumns = 100;
-	const int mapObjectsRows = 10;
-	const int matrixCol = 4;
-	const int matrixRow = 4;
+	const int maxNumberOfColumns  = 100;
+	const int mapScale			  = 2.5;
+	const int mapObjectColumns    = 100;
+	const int mapObjectsRows      = 10;
+	const int matrixCol           = 4;
+	const int matrixRow           = 4;
 
 	//Game object indexes
-	const int checkPointIndex = 0;
-	const int isleIndex = 1;
-	const int wallIndex = 2;
-	const int waterTankIndex = 3;
-	const int crossEffectIndex = 4;
-	const int dummyModelsIndex = 5;
-	const int enemyCarIndex = 6;
+	const int checkPointIndex   = 0;
+	const int isleIndex         = 1;
+	const int wallIndex         = 2;
+	const int waterTankIndex    = 3;
+	const int crossEffectIndex  = 4;
+	const int dummyModelsIndex  = 5;
+	const int enemyCarIndex	    = 6;
 
 	const int numberOfLaps = 5;
 
 	//Total number of each object
-	int numberOfCheckpoints = 0;
-	int numberOfIsles = 0;
-	int numberOfWalls = 0;
-	int numberOfCrosses = 0;
-	int numberOfDummyModels = 0;
-	int numberOfWaterTanks = 0;
-	int numberOfEnemies = 0;
+	int numberOfCheckpoints  = 0; 
+	int numberOfIsles		 = 0; 
+	int numberOfWalls		 = 0; 
+	int numberOfCrosses      = 0; 
+	int numberOfDummyModels  = 0; 
+	int numberOfWaterTanks	 = 0;                          
+	int numberOfEnemies		 = 0; 
 
 	//Font sizes
-	const int gameFontSize = 24;
-	const int startFontSize = 30;
+	const int gameFontSize   = 24;
+	const int startFontSize  = 30;
 
 	//Font coordinates
-	const int gameStateTextXPos = 1090;
-	const int gameStateTextYPos = 690;
-	const int countdownTextXPos = 625;
-	const int levelOneXPos = 1;
-	const int levelOneYPos = 608;
-	const int levelTwoXPos = 550;
-	const int levelTwoYPos = 649;
-	const int levelThreeXPos = 1105;
-	const int levelThreeYPos = 690;
-	const int adjustedLevelTwoYPos = 635;
-	const int adjustedlevelThreeXPos = 1210;
+	const int gameStateTextXPos		  = 1090;
+	const int gameStateTextYPos		  = 690;
+	const int countdownTextXPos       = 625;
+	const int levelOneXPos			  = 1;
+	const int levelOneYPos			  = 608;
+	const int levelTwoXPos			  = 550;
+	const int levelTwoYPos			  = 649;
+	const int levelThreeXPos		  = 1105;
+	const int levelThreeYPos		  = 690;
+	const int adjustedLevelTwoYPos	  = 635;
+	const int adjustedlevelThreeXPos  = 1210;
 
 	//Button Coordinates
 	const int buttonOneXCoordinate = 550;
@@ -137,118 +159,118 @@ void main()
 
 
 	//Basic integers
-	const int matrixStart = 0;
-	const int zeroInt = 0;
-	const int twoInt = 2;
-	const int oneInt = 1;
+	const int matrixStart  = 0;
+	const int zeroInt      = 0;
+	const int twoInt       = 2;
+	const int oneInt	   = 1;
 
 	//Checkpoint and lap information
-	const int stageIncrement = 1;
-	const int startingLap = 1;
-	int enemyCheckpoint = 0;
-	int stageNumber = 0;
-	int currentLap = 1;
+	const int stageIncrement  = 1;
+	const int startingLap	  = 1;
+	int enemyCheckpoint       = 0;
+	int stageNumber			  = 0;
+	int currentLap			  = 1;
 
 	//Gametime information
 	int playerMinutes = 0;
 
 	//Y coordinates
-	const float obstacleYPosition = -3.0f;
-	const float undergroundYPosition = -5.0f;
-	const float abovegroundYPosition = 5.0f;
+	const float obstacleYPosition     = -3.0f;
+	const float undergroundYPosition  = -5.0f;
+	const float abovegroundYPosition  = 5.0f;
 
 	//Information needed for collision detection
-	const float racecarRadius = 3.8f / 2.0f;
-	const float enemyRadius = 3.8f / 2.0f;
-	const float checkpointStrutRadius = 1.5f;
-	const float tankRadius = 4.0f;
-	const float isleRadius = 1.5f;
-	const float checkpointHalfXWidth = 9.86159f;
-	const float checkpointHalfZWidth = 1.28539f;
-	const float wallXHalfDepth = 0.15f;
-	const float wallZHalfDepth = 4.5f;
-	const float dummyEnemyDistance = 0.1f;
+	const float racecarRadius		   = 3.8f / 2.0f;
+	const float enemyRadius			   = 3.8f / 2.0f;
+	const float checkpointStrutRadius  = 1.5f;
+	const float tankRadius			   = 4.0f;
+	const float isleRadius			   = 1.5f;
+	const float checkpointHalfXWidth   = 9.86159f;
+	const float checkpointHalfZWidth   = 1.28539f;
+	const float wallXHalfDepth		   = 0.15f;
+	const float wallZHalfDepth		   = 4.5f;
+	const float dummyEnemyDistance     = 0.1f;
 
 	//Information about the boost
-	const float boostThreshold = 3.0f;
-	const float initialBoostCooldown = 5.0f;
-	const float boostWarningTime = 2.0f;
-	const float healthNeededForBoost = 30.0f;
+	const float boostThreshold		  = 3.0f;
+	const float initialBoostCooldown  = 5.0f;
+	const float boostWarningTime	  = 2.0f;
+	const float healthNeededForBoost  = 30.0f;
 
 	//Information about the camera
-	const float cameraRotationAmount = 6.5f;
-	const float cameraRotation = 25.0f;
-	const float thirdPersonXPos = 0.0f;
-	const float thirdPersonYPos = 20.0f;
-	const float thirdPersonZPos = -30.0f;
-	const float firstPersonXPos = 0.0f;
-	const float firstPersonYPos = 3.0f;
-	const float firstPersonZPos = 5.0f;
-	const float cameraMovementMaxMovement = 5.0f;
-	const float raceCarCameraRotation = 45.0f;
+	const float cameraRotationAmount	   = 6.5f;
+	const float cameraRotation			   = 25.0f;
+	const float thirdPersonXPos			   = 0.0f;
+	const float thirdPersonYPos			   = 20.0f;
+	const float thirdPersonZPos			   = -30.0f;
+	const float firstPersonXPos			   = 0.0f;
+	const float firstPersonYPos			   = 3.0f;
+	const float firstPersonZPos			   = 5.0f;
+	const float cameraMovementMaxMovement  = 5.0f;
+	const float raceCarCameraRotation	   = 45.0f;
 
 	//Information about the model coordinates
-	const float skyXPos = 0.0f;
-	const float skyYPos = -960.0f;
-	const float skyZPos = 0.0f;
-	const float zeroFloat = 0.0f;
-	const float oneFloat = 1.0f;
-	const float raceCarXPos = -2.5f;
-	const float raceCarZPos = -35.0f;
-	const float spriteXPosition = 0.0f;
-	const float spriteYPosition = 608.0f;
-
+	const float skyXPos			 = 0.0f;
+	const float skyYPos			 = -960.0f;
+	const float skyZPos			 = 0.0f;
+	const float zeroFloat		 = 0.0f;
+	const float oneFloat		 = 1.0f;
+	const float raceCarXPos		 = -2.5f;
+	const float raceCarZPos      = -35.0f;
+	const float spriteXPosition  = 0.0f;
+	const float spriteYPosition  = 608.0f;
+	
 	//Information about scale and conversions
-	const float halfScale = 0.5f;
-	const float scaleReset = 1.0f;
-	const float conversionToKilo = 3.6f;
-	const float collisionResponseMultiplierBoundaries = 2.0f;
-	const float collisionResponseMulitplierObstacles = 1.3f;
-	const float minuteThreshold = 60.0f;
-	const float crossStopWatchLimit = 0.8f;
+	const float halfScale							   = 0.5f;
+	const float scaleReset							   = 1.0f;
+	const float conversionToKilo					   = 3.6f;
+	const float collisionResponseMultiplierBoundaries  = 2.0f;
+	const float collisionResponseMulitplierObstacles   = 1.3f;
+	const float minuteThreshold						   = 60.0f;
+	const float crossStopWatchLimit					   = 0.8f;
 
 	const float startingPlayersHealth = 100.0f;
 
 	//Information about the movement vector for the racecar Model
-	const float thrustForwardMultiplier = 1.0f;
-	const float boostForwarMultiplier = 4.0f;
-	const float thrustBackwardMultiplier = 4.0f;
-	const float enemyForwardMultiplier = 2.0f;
-	const float coefficientOfDrag = -0.001f;
-	float thrustForwardScalar = 0.0f;
-	float thrustBackwardScalar = 0.0f;
+	const float thrustForwardMultiplier   = 1.0f;
+	const float boostForwarMultiplier	  = 4.0f;
+	const float thrustBackwardMultiplier  = 4.0f;
+	const float enemyForwardMultiplier    = 2.0f;
+	const float coefficientOfDrag		  = -0.001f;
+	float thrustForwardScalar		      = 0.0f;
+	float thrustBackwardScalar			  = 0.0f;
 
 	//Information about the players health and speed
-	float playersHealth = 100.0f;
-	float playerSeconds = 0.0f;
-	float speed = 0.0f;
+	float playersHealth  = 100.0f;
+	float playerSeconds  = 0.0f;
+	float speed			 = 0.0f;
 
 	//Information about the player and enemy coorinates
-	float xPos = 0.0f;
-	float zPos = 0.0f;
-	float newXPos = 0.0f;
-	float newZPos = 0.0f;
-	float enemyXPos = 0.0f;
-	float enemyZPos = 0.0f;
+	float xPos		 = 0.0f;
+	float zPos		 = 0.0f;
+	float newXPos    = 0.0f;
+	float newZPos    = 0.0f;
+	float enemyXPos  = 0.0f;
+	float enemyZPos  = 0.0f;
 
 	//Variables used for the control of the camera movement and positioning
-	float maxCameraZ = 0.0f;
-	float maxCameraX = 0.0f;
-	float minCameraZ = 0.0f;
-	float minCameraX = 0.0f;
-	float cameraXMovement = 0.0f;
-	float cameraZMovement = 0.0f;
-	float cameraXRotationAmount = 0.0f;
-	float cameraYRotationAmount = 0.0f;
-	float mouseMovementX = 0.0f;
-	float mouseMovementY = 0.0f;
+	float maxCameraZ			 = 0.0f;
+	float maxCameraX			 = 0.0f;
+	float minCameraZ			 = 0.0f;
+	float minCameraX			 = 0.0f;
+	float cameraXMovement		 = 0.0f;
+	float cameraZMovement		 = 0.0f;
+	float cameraXRotationAmount  = 0.0f;
+	float cameraYRotationAmount  = 0.0f;
+	float mouseMovementX		 = 0.0f;
+	float mouseMovementY		 = 0.0f;
 
 	//Information about the countdown timer
-	float startDownCounter = 4.0f;
+	float startDownCounter  = 4.0f;
 
 	//Information about the boost timings
-	float boostTimer = 0.0f;
-	float boostCooldown = 5.0f;
+	float boostTimer	 = 0.0f;
+	float boostCooldown  = 5.0f;
 
 	//Initialises the matrix needed for the facing vector 
 	float matrix[matrixRow][matrixCol];
@@ -258,84 +280,84 @@ void main()
 	bool loadedIn = false;
 
 	//Initialises the font and media location texts 
-	string font = "STENCIL STD";
-	string mediaText = "./media";
-	string extraMediaText = "./extraMedia";
+	string font			   = "STENCIL STD";
+	string mediaText	   = "./media";
+	string extraMediaText  = "./extraMedia";
 
 	//Initialises the text strings that are used in the User interface
-	string clearTextStream = "";
-	string gameOverText = "game state: Over";
-	string gamePausedText = "game state: Paused";
-	string gamePlayingText = "game state: Playing";
-	string gameStartingText = "Press SPACE to play";
-	string optionOneText = "Load Map_One";
-	string optionTwoText = "Load Map_Two";
-	string exitText = "Exit";
-	string restartText = "Click to Restart!";
-	string gameTimeText = "game time: ";
-	string playerHealthText = "Health: ";
-	string FPSText = "FPS: ";
-	string playerSpeedText = "Speed: ";
-	string speedReadoutText = "km/h";
+	string clearTextStream		= "";
+	string gameOverText			= "game state: Over";
+	string gamePausedText       = "game state: Paused";
+	string gamePlayingText      = "game state: Playing";
+	string gameStartingText     = "Press SPACE to play";
+	string optionOneText		= "Load Map_One";
+	string optionTwoText		= "Load Map_Two";
+	string exitText				= "Exit";
+	string restartText			= "Click to Restart!";
+	string gameTimeText		    = "game time: ";
+	string playerHealthText     = "Health: ";
+	string FPSText              = "FPS: ";
+	string playerSpeedText      = "Speed: ";
+	string speedReadoutText     = "km/h";
 
 	//Initialises the text strings that tell the user information about the game
-	string stageText = "Stage ";
-	string lapText = "Lap ";
-	string completeText = " Complete!";
-	string boostCooldownText = "Boost Cooldown: ";
-	string boostActiveText = "Boost: Active ";
-	string boostOverheatingText = "1s to overheating";
-	string goText = "Go!";
-	string slashChar = "/";
-	string sChar = "s";
-	string mChar = "m";
-	string spaceChar = " ";
+	string stageText             = "Stage ";
+	string lapText               = "Lap ";
+	string completeText          = " Complete!";
+	string boostCooldownText     = "Boost Cooldown: ";
+	string boostActiveText       = "Boost: Active ";
+	string boostOverheatingText  = "1s to overheating";
+	string goText                = "Go!";
+	string slashChar             = "/";
+	string sChar                 = "s";
+	string mChar				 = "m";
+	string spaceChar			 = " ";
 
 	//Initialises the mesh strings used to create the models in the game
-	string checkPointMeshString = "Checkpoint.x";
-	string aisleMeshString = "IsleStraight.x";
-	string wallMeshString = "Wall.x";
-	string tankMeshString = "TankSmall1.x";
-	string crossMeshString = "Cross.x";
-	string dummyMeshString = "Dummy.x";
-	string enemyCarMeshString = "race3.x";
-	string skyBoxMeshString = "Skybox 07.x";
-	string groundMeshString = "ground.x";
-	string raceMeshString = "race2.x";
-	string uiSpriteText = "ui_backdrop_1.jpg";
+	string checkPointMeshString  = "Checkpoint.x";
+	string aisleMeshString       = "IsleStraight.x";
+	string wallMeshString        = "Wall.x";
+	string tankMeshString        = "TankSmall1.x";
+	string crossMeshString       = "Cross.x";
+	string dummyMeshString       = "Dummy.x";
+	string enemyCarMeshString    = "race3.x";
+	string skyBoxMeshString      = "Skybox 07.x";
+	string groundMeshString      = "ground.x";
+	string raceMeshString        = "race2.x";
+	string uiSpriteText			 = "ui_backdrop_1.jpg";
 
 	//Strings for the two maps 
 	string mapOneString = "Map_One.txt";
 	string mapTwoString = "Map_Two.txt";
 
 	//Initialises all the keys that will be used in the program
-	EKeyCode SpaceKey = Key_Space;
-	EKeyCode EscapeKey = Key_Escape;
-	EKeyCode WKey = Key_W;
-	EKeyCode AKey = Key_A;
-	EKeyCode SKey = Key_S;
-	EKeyCode DKey = Key_D;
-	EKeyCode DownKey = Key_Down;
-	EKeyCode UpKey = Key_Up;
-	EKeyCode LeftKey = Key_Left;
-	EKeyCode RightKey = Key_Right;
-	EKeyCode Number2Key = Key_2;
-	EKeyCode Number1Key = Key_1;
-	EKeyCode PauseKey = Key_P;
-	EKeyCode LeftClick = Mouse_LButton;
+	EKeyCode SpaceKey	 = Key_Space;
+	EKeyCode EscapeKey   = Key_Escape;
+	EKeyCode WKey		 = Key_W;
+	EKeyCode AKey		 = Key_A;
+	EKeyCode SKey		 = Key_S;
+	EKeyCode DKey		 = Key_D;
+	EKeyCode DownKey	 = Key_Down;
+	EKeyCode UpKey		 = Key_Up;
+	EKeyCode LeftKey	 = Key_Left;
+	EKeyCode RightKey    = Key_Right;
+	EKeyCode Number2Key	 = Key_2;
+	EKeyCode Number1Key	 = Key_1;
+	EKeyCode PauseKey    = Key_P;
+	EKeyCode LeftClick   = Mouse_LButton;
 
 	//Initialises the camera and engine type
-	ECameraType cameraType = kManual;
-	EEngineType gameEngineType = kTLX;
+	ECameraType cameraType		= kManual;
+	EEngineType gameEngineType  = kTLX;
 
 	//File stream to be used for the reading of the files
 	ifstream readFileStream;
 
 	//Initialises the enums to be used by the program as global enums
-	gameState enumGameState = MainMenu;
-	driveStates enumCarDriveState = Normal;
-	laps enumGameLaps = Lap;
-	CameraPositions cameraView = ThirdPerson;
+	gameState enumGameState        = MainMenu;
+	driveStates enumCarDriveState  = Normal;
+	laps enumGameLaps			   = Lap;
+	CameraPositions cameraView     = ThirdPerson;
 
 	//Initialies the strings to be used by the program to outpute information on to the screen
 	stringstream startText;
@@ -344,13 +366,13 @@ void main()
 	stringstream display;
 
 	//Initialises the three vectors used by the racecar to zero
-	vector2D momentum{ zeroFloat, zeroFloat };
-	vector2D thrust{ zeroFloat, zeroFloat };
-	vector2D drag{ zeroFloat, zeroFloat };
+	vector2D momentum  { zeroFloat, zeroFloat };
+	vector2D thrust    { zeroFloat, zeroFloat };
+	vector2D drag      { zeroFloat, zeroFloat };
 
 	//Loads the game Engine and the fonts to be used by the engine
-	I3DEngine* myEngine = New3DEngine(gameEngineType);
-	myEngine->StartWindowed();
+	I3DEngine* myEngine = New3DEngine(gameEngineType);	
+	myEngine->StartWindowed();	
 	IFont* gameFont = myEngine->LoadFont(font, gameFontSize);
 	IFont* startFont = myEngine->LoadFont(font, startFontSize);
 
@@ -405,11 +427,6 @@ void main()
 	float timer = myEngine->Timer();
 	float rotationAmount = zeroFloat;
 
-	if (HelloWorld() == 5)
-	{
-		enumGameState = Playing;
-	}
-
 	//goes through while the game engine is running
 	while (myEngine->IsRunning())
 	{
@@ -419,7 +436,7 @@ void main()
 		//Calculates the thrust vectors scalar amount each frame
 		thrustForwardScalar = timer / thrustForwardMultiplier;
 		thrustBackwardScalar = timer / thrustBackwardMultiplier;
-
+		
 		//Displays the frame rate of the program
 		timer = myEngine->Timer();
 		float FPS = (oneFloat / timer);
@@ -448,7 +465,7 @@ void main()
 		{
 			//calls the DisplayText function to print the first map text to the screen
 			DisplayText(optionOneText, startFont, NULL, buttonOneXCoordinate, buttonOneYCoordinate, clearTextStream);
-
+			
 			//calls the DisplayText function to print the second map text to the screen
 			DisplayText(optionTwoText, startFont, NULL, buttonTwoXCoordinate, buttonTwoYCoordinate, clearTextStream);
 
@@ -456,9 +473,9 @@ void main()
 			DisplayText(exitText, startFont, NULL, exitButtonXCoordinate, exitButtonYCoordinate, clearTextStream);
 
 			//Checks if the the left mouse button has been pressed within the text limits
-			if (mouseCoordX >= buttonOneXCoordinate && mouseCoordX <= (buttonOneXCoordinate + buttonXLimit)
-				&& mouseCoordY >= buttonOneYCoordinate && mouseCoordY <= (buttonOneYCoordinate + buttonYLimit)
-				&& myEngine->KeyHit(LeftClick))
+			if (mouseCoordX >= buttonOneXCoordinate && mouseCoordX <= (buttonOneXCoordinate + buttonXLimit) 
+			 && mouseCoordY >= buttonOneYCoordinate && mouseCoordY <= (buttonOneYCoordinate + buttonYLimit) 
+			 && myEngine->KeyHit(LeftClick))
 			{
 				//calls the OpenFile function to open the file to be read from
 				OpenFile(readFileStream, mapOneString);
@@ -471,22 +488,22 @@ void main()
 			}
 			//Checks if the the left mouse button has been pressed within the text limits
 			else if (mouseCoordX >= buttonTwoXCoordinate && mouseCoordX <= (buttonOneXCoordinate + buttonXLimit)
-				&& mouseCoordY >= buttonTwoYCoordinate && mouseCoordY <= (buttonTwoYCoordinate + buttonYLimit)
-				&& myEngine->KeyHit(LeftClick))
+				  && mouseCoordY >= buttonTwoYCoordinate && mouseCoordY <= (buttonTwoYCoordinate + buttonYLimit)
+				  && myEngine->KeyHit(LeftClick))
 			{
 				//calls the OpenFile function to open the file to be read from
 				OpenFile(readFileStream, mapTwoString);
 
 				//calls the ReadFile function to read the file and store the frequency of each game object
 				ReadFile(readFileStream, FileVector, numberOfCheckpoints, numberOfIsles, numberOfWalls, numberOfCrosses, numberOfDummyModels, numberOfWaterTanks, numberOfEnemies);
-
+				
 				//Sets the game state to 'Start'
 				enumGameState = Start;
 			}
 			//Checks if the the left mouse button has been pressed within the text limits
-			else if (mouseCoordX >= exitButtonXCoordinate && mouseCoordX <= (exitButtonXCoordinate + exitButtonXLimit)
-				&& mouseCoordY >= exitButtonYCoordinate && mouseCoordY <= (exitButtonYCoordinate + exitButtonYLimit)
-				&& myEngine->KeyHit(LeftClick))
+			else if (mouseCoordX >= exitButtonXCoordinate && mouseCoordX <= (exitButtonXCoordinate + exitButtonXLimit) 
+				  && mouseCoordY >= exitButtonYCoordinate && mouseCoordY <= (exitButtonYCoordinate + exitButtonYLimit) 
+				  && myEngine->KeyHit(LeftClick))
 			{
 				//Stops the program and closes the window
 				myEngine->Stop();
@@ -541,7 +558,7 @@ void main()
 				//Goes through each Cross in the vector and creates its model using the X, Z and Rotation arrays
 				for (int t = zeroInt; t < numberOfCrosses; t++)
 				{
-
+					
 					InitialiseMap(allMapObjects[crossEffectIndex][t], crossMesh, FileVector[crossEffectIndex][t].x, FileVector[crossEffectIndex][t].z, FileVector[crossEffectIndex][t].rotation, FileVector[crossEffectIndex][t].scale);
 					allMapObjects[crossEffectIndex][t].model->SetY(undergroundYPosition);
 				}
@@ -575,7 +592,7 @@ void main()
 		{
 			//Decrements the countdown timer
 			startDownCounter -= timer;
-
+			
 			//Checks if the countdown timer is greater than 'one' to display the numbers until 'one'
 			if (startDownCounter >= oneFloat)
 			{
@@ -633,7 +650,7 @@ void main()
 
 			//Calls the DisplayText function to print the players health and the game state text to the screen
 			DisplayText(playerHealthText, gameFont, playersHealth, levelOneXPos, levelTwoYPos, clearTextStream);
-			DisplayText(gamePlayingText, gameFont, NULL, gameStateTextXPos, gameStateTextYPos, clearTextStream);
+			DisplayText(gamePlayingText, gameFont, NULL, gameStateTextXPos, gameStateTextYPos, clearTextStream);	
 
 			//Checks if the PauseKey has been pressed and then changes the game state
 			//to either playing or paused dependingon what it was originally
@@ -647,12 +664,12 @@ void main()
 			//goes through each option in the cameraView depending on what its state is
 			switch (cameraView)
 			{
-				//Sets the cameras; position to the Third person perspective 
+			//Sets the cameras; position to the Third person perspective 
 			case ThirdPerson:
 
 				gameCamera->SetLocalPosition(thirdPersonXPos, thirdPersonYPos, thirdPersonZPos);
 				break;
-				//Sets the cameras' position to the First person perspective
+			//Sets the cameras' position to the First person perspective
 			case FirstPerson:
 
 				gameCamera->SetLocalPosition(firstPersonXPos, firstPersonYPos, firstPersonZPos);
@@ -828,7 +845,7 @@ void main()
 
 				raceCarModel->RotateY(-rotationAmount);
 			}
-
+			
 			//Checks if the UpKey is being held down and then moves the cameras' position forward
 			if (myEngine->KeyHeld(UpKey))
 			{
@@ -860,7 +877,7 @@ void main()
 					//Moves the camera at the correct speed and stores how far it has moved
 					//to be able to reset the camera
 					cameraZMovement -= (timer * cameraRotationAmount);
-					dummyCamera->MoveLocalZ(-(timer * cameraRotationAmount));
+					dummyCamera->MoveLocalZ(-( timer * cameraRotationAmount));
 				}
 			}
 			//Checks if the UpKey is being held down and then moves the cameras' position to the left
@@ -902,7 +919,7 @@ void main()
 			momentum = sum3(momentum, thrust, drag);
 			//calculates the speed by calculating the distance of the momentum vector multiplied by the mapScale 
 			//and then multiplied by the amount needed for the speed to be in Km/h
-			speed = floor((sqrt(momentum.x * momentum.x + momentum.z * momentum.z) * mapScale * conversionToKilo));
+			speed = floor((sqrt(momentum.x*momentum.x + momentum.z*momentum.z) * mapScale * conversionToKilo));
 
 			//Calculates the racecars' new coordinates by adding the racecars' momentum to its current coordinates
 			newXPos = xPos + momentum.x;
@@ -941,7 +958,7 @@ void main()
 				//Goes through each of the enemys' vehicle state
 				switch (allMapObjects[enemyCarIndex][i].enemyVehicleState)
 				{
-					//ResetView will set the enemy's scale to the same scale as the reacecar and will make the enemy lookat the next checkpoint
+				//ResetView will set the enemy's scale to the same scale as the reacecar and will make the enemy lookat the next checkpoint
 				case ResetView:
 
 					allMapObjects[enemyCarIndex][i].model->LookAt(allMapObjects[dummyModelsIndex][allMapObjects[enemyCarIndex][i].enemyCheckpoints].model);
@@ -950,7 +967,7 @@ void main()
 
 					allMapObjects[enemyCarIndex][i].enemyVehicleState = MovingForward;
 					break;
-					//MovingForward will move the enemy forward and check if it has reached the next checkpoint and then reset the enemy
+				//MovingForward will move the enemy forward and check if it has reached the next checkpoint and then reset the enemy
 				case MovingForward:
 
 					//Move the enemy forward by its speed multiplier
@@ -972,17 +989,17 @@ void main()
 
 					//Checks if the enemy has collided with the checkpoint and then set the enemys' checkpoint to the next one
 					if (point2PointCollision2D(DistanceCalculation(enemyXPos, enemyZPos,
-						allMapObjects[dummyModelsIndex][allMapObjects[enemyCarIndex][i].enemyCheckpoints].model->GetX(),
-						allMapObjects[dummyModelsIndex][allMapObjects[enemyCarIndex][i].enemyCheckpoints].model->GetZ(), dummyEnemyDistance)))
+																   allMapObjects[dummyModelsIndex][allMapObjects[enemyCarIndex][i].enemyCheckpoints].model->GetX(),
+																   allMapObjects[dummyModelsIndex][allMapObjects[enemyCarIndex][i].enemyCheckpoints].model->GetZ(), dummyEnemyDistance)))
 					{
 
 						allMapObjects[enemyCarIndex][i].enemyCheckpoints++;
 						allMapObjects[enemyCarIndex][i].stopWatch = zeroFloat;
 						allMapObjects[enemyCarIndex][i].enemyVehicleState = CheckPointReached;
-
+						
 					}
 					break;
-					//CheckPointReached will check if the last checkpoint has been reached and reset it and will reset the enemy
+				//CheckPointReached will check if the last checkpoint has been reached and reset it and will reset the enemy
 				case CheckPointReached:
 
 					if (allMapObjects[enemyCarIndex][i].enemyCheckpoints == numberOfDummyModels)
@@ -996,7 +1013,7 @@ void main()
 
 						allMapObjects[enemyCarIndex][i].enemyVehicleState = ResetView;
 					}
-
+					
 					break;
 				}
 			}
@@ -1012,8 +1029,8 @@ void main()
 					//Performs collision detection between the checkpoint struts and the racecar model  
 					if (sphere2SphereCollision2D((allMapObjects[checkPointIndex][i].model->GetX() + checkpointHalfXWidth) - checkpointStrutRadius, (allMapObjects[checkPointIndex][i].model->GetZ() + checkpointHalfZWidth) - checkpointStrutRadius,
 						checkpointStrutRadius, raceCarModel->GetX(), raceCarModel->GetZ(), racecarRadius) ||
-						sphere2SphereCollision2D((allMapObjects[checkPointIndex][i].model->GetX() - checkpointHalfXWidth) + checkpointStrutRadius, (allMapObjects[checkPointIndex][i].model->GetZ() - checkpointHalfZWidth) + checkpointStrutRadius,
-							checkpointStrutRadius, raceCarModel->GetX(), raceCarModel->GetZ(), racecarRadius))
+						sphere2SphereCollision2D((allMapObjects[checkPointIndex][i].model->GetX() - checkpointHalfXWidth) + checkpointStrutRadius, (allMapObjects[checkPointIndex][i].model->GetZ() - checkpointHalfZWidth) + checkpointStrutRadius, 
+						checkpointStrutRadius, raceCarModel->GetX(), raceCarModel->GetZ(), racecarRadius))
 					{
 						//If there is a collision, the racecars' x and z momentum vectors will negate themself and be divided by 1.3
 						//The players health will also be decremented
@@ -1029,7 +1046,7 @@ void main()
 					if (sphere2SphereCollision2D((allMapObjects[checkPointIndex][i].model->GetX() + checkpointHalfZWidth) - checkpointStrutRadius, (allMapObjects[checkPointIndex][i].model->GetZ() + checkpointHalfXWidth) - checkpointStrutRadius,
 						checkpointStrutRadius, raceCarModel->GetX(), raceCarModel->GetZ(), racecarRadius) ||
 						sphere2SphereCollision2D((allMapObjects[checkPointIndex][i].model->GetX() - checkpointHalfZWidth) + checkpointStrutRadius, (allMapObjects[checkPointIndex][i].model->GetZ() - checkpointHalfXWidth) + checkpointStrutRadius,
-							checkpointStrutRadius, raceCarModel->GetX(), raceCarModel->GetZ(), racecarRadius))
+						checkpointStrutRadius, raceCarModel->GetX(), raceCarModel->GetZ(), racecarRadius))
 					{
 						//If there is a collision, the racecars' x and z momentum vectors will negate themself and be divided by 1.3
 						//The players health will also be decremented
@@ -1070,15 +1087,15 @@ void main()
 						//Goes through each of the specialEffectStates
 						switch (allMapObjects[crossEffectIndex][i].specialEffectState)
 						{
-							//Activated will set the checkpoints cross position to aboveground and will resets its stopwatch
+						//Activated will set the checkpoints cross position to aboveground and will resets its stopwatch
 						case Activated:
 
 							allMapObjects[crossEffectIndex][i].model->SetY(abovegroundYPosition);
 							allMapObjects[crossEffectIndex][i].specialEffectState = Waiting;
 							allMapObjects[crossEffectIndex][i].stopWatch = zeroFloat;
 							break;
-						case Waiting:
-							//Waiting will keep the cross aboveground for 2 seconds and then reset it back to belowground
+						case Waiting:	
+						//Waiting will keep the cross aboveground for 2 seconds and then reset it back to belowground
 
 							//checks if the cross has been aboveground for greater than 2 seconds
 							if (allMapObjects[crossEffectIndex][i].stopWatch >= crossStopWatchLimit)
@@ -1122,7 +1139,7 @@ void main()
 							}
 							break;
 						case NotActivated:
-							//NotActivated will do nothing to make sure that the cross does not reappear until the lap is complete
+						//NotActivated will do nothing to make sure that the cross does not reappear until the lap is complete
 							break;
 						}
 					}
@@ -1132,7 +1149,7 @@ void main()
 				//if (enumGameLaps == Lap)
 
 				//Checks if the enumGameLaps state is equal to LapComplete and then runs the code to increment the lap
-				else if (enumGameLaps == LapComplete)
+				else if (enumGameLaps == LapComplete) 
 				{
 					//Increments the lap
 					currentLap++;
@@ -1179,7 +1196,7 @@ void main()
 				case zAxis:
 					//If there is a collision on the zAxis, the racecars' z momentum vector will negate itself and be divided by half
 					//The players health will also be decremented
-					momentum.z = -momentum.z / collisionResponseMultiplierBoundaries;
+					momentum.z = -momentum.z/ collisionResponseMultiplierBoundaries;
 					playersHealth--;
 					break;
 				case None:
@@ -1213,7 +1230,7 @@ void main()
 					raceCarModel->SetPosition(newXPos, zeroInt, newZPos);
 				}
 			}
-
+			
 			//Goes through each WaterTank in the map Objects vector
 			for (int i = zeroInt; i < numberOfWaterTanks; i++)
 			{
@@ -1221,7 +1238,7 @@ void main()
 				if (sphere2SphereCollision2D(allMapObjects[waterTankIndex][i].model->GetX(), allMapObjects[waterTankIndex][i].model->GetZ(), tankRadius, raceCarModel->GetX(), raceCarModel->GetZ(), racecarRadius))
 				{
 					//If there is a collision, the racecars' x and z momentum vectors will negate themself and be divided by 1.3
-					//The players health will also be decremented
+						//The players health will also be decremented
 					momentum.x = -momentum.x / collisionResponseMulitplierObstacles;
 					momentum.z = -momentum.z / collisionResponseMulitplierObstacles;
 					playersHealth--;
@@ -1245,10 +1262,10 @@ void main()
 			speedReadout.str(clearTextStream);
 
 			//Displays the gameTime in the bottom right of the screen
-			secondsReadout << gameTimeText << int(playerMinutes) << mChar << spaceChar << int(playerSeconds) << sChar;
-			gameFont->Draw(secondsReadout.str(), levelThreeXPos, levelOneYPos);
+			secondsReadout << gameTimeText << int(playerMinutes) << mChar << spaceChar << int(playerSeconds) << sChar;			
+			gameFont->Draw(secondsReadout.str(), levelThreeXPos, levelOneYPos);			
 			secondsReadout.str(clearTextStream);
-
+			
 			//Calls the DisplayText function to print the players health and the game state text to the screen
 			DisplayText(playerHealthText, gameFont, playersHealth, levelOneXPos, levelTwoYPos, clearTextStream);
 			DisplayText(gamePausedText, gameFont, NULL, gameStateTextXPos, gameStateTextYPos, clearTextStream);
@@ -1306,7 +1323,7 @@ void main()
 			display << lapText << currentLap << slashChar << numberOfLaps;
 			gameFont->Draw(display.str(), adjustedlevelThreeXPos, adjustedLevelTwoYPos);
 			display.str(clearTextStream);
-
+			
 			//Displays the gameTime in the bottom right of the screen
 			secondsReadout << gameTimeText << int(playerMinutes) << mChar << spaceChar << int(playerSeconds) << sChar;
 			gameFont->Draw(secondsReadout.str(), levelThreeXPos, levelOneYPos);
@@ -1314,37 +1331,13 @@ void main()
 
 			//calls ths DisplayText function to print the players health and the game state text to the screen
 			DisplayText(playerHealthText, gameFont, playersHealth, levelOneXPos, adjustedLevelTwoYPos, clearTextStream);
-			DisplayText(gameOverText, gameFont, NULL, gameStateTextXPos, gameStateTextYPos, clearTextStream);
+			DisplayText(gameOverText, gameFont, NULL, gameStateTextXPos, gameStateTextYPos, clearTextStream);	
 		}
 	}
 	//While myEngine->IsRunning()
 
 	//Deletes the gameEngine
 	myEngine->Delete();
-}
-
-void InitialiseMap(Map& theObject, IMesh* objectMesh, float XPos, float ZPos, float rotationAmount, float scaleAmount);
-
-bool point2PointCollision2D(float distance);
-
-void DisplayText(string displayText, IFont* displayFont, float displayNumber, int xCoordinate, int yCoordinate, string clearStream);
-
-void ReadFile(ifstream &infile, vector<vector<ObjectLoading>> &inputArray, int& checkpointNum, int& isleNum, int& wallNum, int& crossNum, int& dummyNum, int& tankNum, int& enemyNum);
-
-void OpenFile(ifstream& infile, string text);
-
-
-//Structure data type used to calculate the speed of each vector for the racecar model
-vector2D scalar(float s, vector2D v)
-{
-
-	return {s * v.x, s * v.z};
-}
-//Structure data type used to calculate the actual speed using all three vectors of the racecar model
-vector2D sum3(vector2D v1, vector2D v2, vector2D v3)
-{
-
-	return {v1.x + v2.x + v3.x, v1.z + v2.z + v3.z};
 }
 
 //Function to load and create all the models in the all Objects vector into the program
